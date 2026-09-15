@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Гонки</title>
+
+
+<style>
+
+/* =========================
+   ОСНОВА
+========================= */
+
+* {
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    margin: 0;
+
+    width: 100%;
+    height: 100vh;
+
+    overflow: hidden;
+
+    background: #111;
+
+    font-family: Arial, sans-serif;
+}
+
+
+/* =========================
+   ИГРОВОЕ ПОЛЕ
+========================= */
+
+#game {
+
+    position: relative;
+
+    width: 100vw;
+    height: 100vh;
+
+    overflow: hidden;
+
+    background: #222;
+}
+
+
+/* =========================
+   ДОРОГА
+========================= */
+
+#road {
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: min(420px, 100vw);
+
+    background: #444;
+
+    border-left: 6px solid white;
+    border-right: 6px solid white;
+
+    overflow: hidden;
+}
+
+
+/* =========================
+   ПОЛОСЫ
+========================= */
+
+.lane-line {
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+
+    width: 4px;
+
+    background: repeating-linear-gradient(
+        to bottom,
+        white 0px,
+        white 70px,
+        transparent 70px,
+        transparent 140px
+    );
+
+    opacity: 0.65;
+}
+
+
+.lane-left {
+
+    left: 33.333%;
+
+}
+
+
+.lane-right {
+
+    right: 33.333%;
+
+}
+
+
+/* =========================
+   ВЕРХНЯЯ ПАНЕЛЬ
+========================= */
+
+#top {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+
+    height: 60px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 20px;
+
+    color: white;
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    background: rgba(0,0,0,0.75);
+
+    z-index: 50;
+
+}
+
+
+/* =========================
+   МАШИНА
+========================= */
+
+#player {
+
+    position: absolute;
+
+    width: 60px;
+    height: 100px;
+
+    bottom: 110px;
+
+    z-index: 20;
+
+    transition: left 0.12s;
+
+}
+
+
+/* Кузов */
+
+.car {
+
+    position: absolute;
+
+    left: 7px;
+    top: 5px;
+
+    width: 46px;
+    height: 90px;
+
+    background: #e53935;
+
+    border: 3px solid #111;
+
+    border-radius: 13px;
+
+}
+
+
+/* Стекло */
+
+.car-window {
+
+    position: absolute;
+
+    left: 13px;
+    top: 20px;
+
+    width: 32px;
+    height: 32px;
+
+    background: #72c8e8;
+
+    border: 2px solid #111;
+
+    border-radius: 7px;
+
+}
+
+
+/* Перед машины */
+
+.car-front {
+
+    position: absolute;
+
+    left: 15px;
+    top: 7px;
+
+    width: 28px;
+    height: 15px;
+
+    background: #ff5555;
+
+    border-radius: 7px 7px 3px 3px;
+
+}
+
+
+/* Фары */
+
+.light {
+
+    position: absolute;
+
+    top: 7px;
+
+    width: 8px;
+    height: 7px;
+
+    background: white;
+
+    border-radius: 3px;
+
+}
+
+
+.light.left {
+    left: 10px;
+}
+
+
+.light.right {
+    right: 10px;
+}
+
+
+/* Колёса */
+
+.wheel {
+
+    position: absolute;
+
+    width: 9px;
+    height: 23px;
+
+    background: #111;
+
+    border-radius: 4px;
+
+}
+
+
+.wheel.a {
+    left: 0;
+    top: 28px;
+}
+
+
+.wheel.b {
+    right: 0;
+    top: 28px;
+}
+
+
+.wheel.c {
+    left: 0;
+    bottom: 10px;
+}
+
+
+.wheel.d {
+    right: 0;
+    bottom: 10px;
+}
+
+
+/* =========================
+   ВРАГ
+========================= */
+
+.enemy {
+
+    position: absolute;
+
+    width: 60px;
+    height: 100px;
+
+    z-index: 15;
+
+}
+
+
+.enemy-car {
+
+    position: absolute;
+
+    left: 7px;
+    top: 5px;
+
+    width: 46px;
+    height: 90px;
+
+    background: #2979ff;
+
+    border: 3px solid #111;
+
+    border-radius: 13px;
+
+}
+
+
+.enemy-window {
+
+    position: absolute;
+
+    left: 13px;
+    top: 20px;
+
+    width: 32px;
+    height: 32px;
+
+    background: #777;
+
+    border: 2px solid #111;
+
+    border-radius: 7px;
+
+}
+
+
+/* =========================
+   МОНЕТКА
+========================= */
+
+.coin {
+
+    position: absolute;
+
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 34px;
+
+    z-index: 10;
+
+}
+
+
+/* =========================
+   КНОПКИ
+========================= */
+
+#controls {
+
+    position: fixed;
+
+    bottom: 20px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+
+    gap: 20px;
+
+    z-index: 60;
+
+}
+
+
+.control {
+
+    width: 75px;
+    height: 60px;
+
+    border: 0;
+
+    border-radius: 15px;
+
+    background: rgba(255,255,255,0.2);
+
+    color: white;
+
+    font-size: 28px;
+
+}
+
+
+/* =========================
+   ЭКРАНЫ
+========================= */
+
+.screen {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 100;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    color: white;
+
+    background: rgba(0,0,0,0.9);
+
+}
+
+
+#gameOver {
+
+    display: none;
+
+}
+
+
+.button {
+
+    padding: 16px 40px;
+
+    border: 0;
+
+    border-radius: 15px;
+
+    background: #ffd600;
+
+    font-size: 20px;
+
+    margin: 8px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     ВЕРХ
+========================= -->
+
+<div id="top">
+
+    <div>
+        🏆 <span id="score">0</span>
+    </div>
+
+    <div>
+        💰 <span id="coins">0</span>
+    </div>
+
+</div>
+
+
+<!-- =========================
+     ИГРА
+========================= -->
+
+<div id="game">
+
+
+    <div id="road">
+
+        <div class="lane-line lane-left"></div>
+
+        <div class="lane-line lane-right"></div>
+
+    </div>
+
+
+    <!-- МАШИНА -->
+
+    <div id="player">
+
+        <div class="car"></div>
+
+        <div class="car-front"></div>
+
+        <div class="car-window"></div>
+
+        <div class="light left"></div>
+        <div class="light right"></div>
+
+        <div class="wheel a"></div>
+        <div class="wheel b"></div>
+        <div class="wheel c"></div>
+        <div class="wheel d"></div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     УПРАВЛЕНИЕ
+========================= -->
+
+<div id="controls">
+
+    <button class="control"
+            onclick="moveLeft()">
+
+        ⬅️
+
+    </button>
+
+
+    <button class="control"
+            onclick="moveRight()">
+
+        ➡️
+
+    </button>
+
+</div>
+
+
+<!-- =========================
+     СТАРТ
+========================= -->
+
+<div id="start" class="screen">
+
+    <h1>🏎️ ГОНКИ</h1>
+
+    <p>
+        Двигайся между полосами<br>
+        и собирай монетки
+    </p>
+
+    <button class="button"
+            onclick="startGame()">
+
+        ▶️ ИГРАТЬ
+
+    </button>
+
+</div>
+
+
+<!-- =========================
+     GAME OVER
+========================= -->
+
+<div id="gameOver"
+     class="screen">
+
+    <h1>💥 АВАРИЯ</h1>
+
+    <p>
+        Счёт:
+        <b id="finalScore">0</b>
+    </p>
+
+    <button class="button"
+            onclick="restart()">
+
+        🔄 ЗАНОВО
+
+    </button>
+
+
+    <button class="button"
+            onclick="menu()">
+
+        ⬅️ МЕНЮ
+
+    </button>
+
+</div>
+
+
+<script>
+
+
+/* =========================
+   ПЕРЕМЕННЫЕ
+========================= */
+
+const game =
+    document.getElementById("game");
+
+const road =
+    document.getElementById("road");
+
+const player =
+    document.getElementById("player");
+
+const scoreText =
+    document.getElementById("score");
+
+const coinsText =
+    document.getElementById("coins");
+
+
+let lane = 1;
+
+let score = 0;
+
+let speed = 6;
+
+let playing = false;
+
+let objects = [];
+
+let spawnTimer;
+
+
+let coins =
+    Number(localStorage.getItem("balance")) || 0;
+
+
+coinsText.textContent = coins;
+
+
+/* =========================
+   ПОЗИЦИЯ
+========================= */
+
+function playerPosition() {
+
+    const roadLeft =
+        road.getBoundingClientRect().left;
+
+    const roadWidth =
+        road.getBoundingClientRect().width;
+
+    const laneWidth =
+        roadWidth / 3;
+
+
+    const x =
+        roadLeft +
+        lane * laneWidth +
+        laneWidth / 2 -
+        30;
+
+
+    player.style.left = x + "px";
+
+}
+
+
+playerPosition();
+
+
+/* =========================
+   ДВИЖЕНИЕ
+========================= */
+
+function moveLeft() {
+
+    if (!playing) return;
+
+    if (lane > 0) {
+
+        lane--;
+
+        playerPosition();
+
+    }
+
+}
+
+
+function moveRight() {
+
+    if (!playing) return;
+
+    if (lane < 2) {
+
+        lane++;
+
+        playerPosition();
+
+    }
+
+}
+
+
+/* Клавиатура */
+
+document.addEventListener(
+    "keydown",
+    function(e) {
+
+        if (e.key === "ArrowLeft") {
+            moveLeft();
+        }
+
+        if (e.key === "ArrowRight") {
+            moveRight();
+        }
+
+    }
+);
+
+
+/* =========================
+   ВРАГ
+========================= */
+
+function createEnemy() {
+
+    const enemy =
+        document.createElement("div");
+
+
+    enemy.className = "enemy";
+
+
+    enemy.innerHTML = `
+        <div class="enemy-car"></div>
+        <div class="enemy-window"></div>
+    `;
+
+
+    const enemyLane =
+        Math.floor(Math.random() * 3);
+
+
+    const roadRect =
+        road.getBoundingClientRect();
+
+
+    const laneWidth =
+        roadRect.width / 3;
+
+
+    const x =
+        roadRect.left +
+        enemyLane * laneWidth +
+        laneWidth / 2 -
+        30;
+
+
+    enemy.style.left = x + "px";
+
+    enemy.style.top = "-110px";
+
+
+    game.appendChild(enemy);
+
+
+    objects.push({
+
+        element: enemy,
+
+        lane: enemyLane,
+
+        y: -110,
+
+        type: "enemy"
+
+    });
+
+}
+
+
+/* =========================
+   МОНЕТА
+========================= */
+
+function createCoin() {
+
+    const coin =
+        document.createElement("div");
+
+
+    coin.className = "coin";
+
+    coin.textContent = "🪙";
+
+
+    const coinLane =
+        Math.floor(Math.random() * 3);
+
+
+    const roadRect =
+        road.getBoundingClientRect();
+
+
+    const laneWidth =
+        roadRect.width / 3;
+
+
+    const x =
+        roadRect.left +
+        coinLane * laneWidth +
+        laneWidth / 2 -
+        22;
+
+
+    coin.style.left = x + "px";
+
+    coin.style.top = "-50px";
+
+
+    game.appendChild(coin);
+
+
+    objects.push({
+
+        element: coin,
+
+        lane: coinLane,
+
+        y: -50,
+
+        type: "coin"
+
+    });
+
+}
+
+
+/* =========================
+   СТОЛКНОВЕНИЕ
+========================= */
+
+function collision(a, b) {
+
+    const A =
+        a.getBoundingClientRect();
+
+    const B =
+        b.getBoundingClientRect();
+
+
+    return !(
+        A.right < B.left ||
+        A.left > B.right ||
+        A.bottom < B.top ||
+        A.top > B.bottom
+    );
+
+}
+
+
+/* =========================
+   ИГРОВОЙ ЦИКЛ
+========================= */
+
+function loop() {
+
+    if (!playing) return;
+
+
+    for (
+        let i = objects.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const obj = objects[i];
+
+
+        obj.y += speed;
+
+
+        obj.element.style.top =
+            obj.y + "px";
+
+
+        /* МОНЕТА */
+
+        if (obj.type === "coin") {
+
+            if (
+                collision(
+                    player,
+                    obj.element
+                )
+            ) {
+
+                coins++;
+
+                localStorage.setItem(
+                    "balance",
+                    coins
+                );
+
+                coinsText.textContent =
+                    coins;
+
+
+                obj.element.remove();
+
+                objects.splice(i, 1);
+
+                continue;
+
+            }
+
+        }
+
+
+        /* ВРАГ */
+
+        if (obj.type === "enemy") {
+
+            if (
+                collision(
+                    player,
+                    obj.element
+                )
+            ) {
+
+                endGame();
+
+                return;
+
+            }
+
+        }
+
+
+        /* УДАЛЕНИЕ */
+
+        if (
+            obj.y >
+            window.innerHeight + 150
+        ) {
+
+            obj.element.remove();
+
+            objects.splice(i, 1);
+
+        }
+
+    }
+
+
+    score++;
+
+    scoreText.textContent =
+        score;
+
+
+    speed =
+        6 + score / 1200;
+
+
+    requestAnimationFrame(loop);
+
+}
+
+
+/* =========================
+   СПАВН
+========================= */
+
+function spawn() {
+
+    if (!playing) return;
+
+
+    if (Math.random() < 0.7) {
+
+        createEnemy();
+
+    } else {
+
+        createCoin();
+
+    }
+
+
+    spawnTimer =
+        setTimeout(
+            spawn,
+            850
+        );
+
+}
+
+
+/* =========================
+   СТАРТ
+========================= */
+
+function startGame() {
+
+    document.getElementById(
+        "start"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "gameOver"
+    ).style.display = "none";
+
+
+    score = 0;
+
+    speed = 6;
+
+    lane = 1;
+
+    playing = true;
+
+
+    objects.forEach(
+        obj => obj.element.remove()
+    );
+
+
+    objects = [];
+
+
+    scoreText.textContent = 0;
+
+    coinsText.textContent = coins;
+
+
+    playerPosition();
+
+
+    spawn();
+
+    requestAnimationFrame(loop);
+
+}
+
+
+/* =========================
+   КОНЕЦ
+========================= */
+
+function endGame() {
+
+    playing = false;
+
+    clearTimeout(spawnTimer);
+
+
+    document.getElementById(
+        "finalScore"
+    ).textContent = score;
+
+
+    document.getElementById(
+        "gameOver"
+    ).style.display = "flex";
+
+
+    objects.forEach(
+        obj => obj.element.remove()
+    );
+
+
+    objects = [];
+
+}
+
+
+/* =========================
+   ЗАНОВО
+========================= */
+
+function restart() {
+
+    document.getElementById(
+        "gameOver"
+    ).style.display = "none";
+
+
+    startGame();
+
+}
+
+
+/* =========================
+   МЕНЮ
+========================= */
+
+function menu() {
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+window.addEventListener(
+    "resize",
+    playerPosition
+);
+
+</script>
+
+</body>
+</html>

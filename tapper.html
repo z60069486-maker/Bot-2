@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Тапалка</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family: Arial, sans-serif;
+
+            background:
+                radial-gradient(circle at top, #292929, #0d0d0d 70%);
+
+            color: white;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .game {
+            width: 100%;
+            max-width: 450px;
+
+            text-align: center;
+
+            padding: 25px;
+        }
+
+
+        /* Заголовок */
+
+        h1 {
+            margin: 0 0 25px;
+
+            font-size: 32px;
+        }
+
+
+        /* Баланс */
+
+        .balance-box {
+            background: rgba(255, 255, 255, 0.08);
+
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+            border-radius: 20px;
+
+            padding: 15px;
+
+            margin-bottom: 50px;
+        }
+
+
+        .balance-title {
+            font-size: 15px;
+            color: #aaa;
+
+            margin-bottom: 5px;
+        }
+
+
+        .balance {
+            font-size: 34px;
+            font-weight: bold;
+        }
+
+
+        /* Монета */
+
+        .coin-area {
+            position: relative;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            margin-bottom: 45px;
+        }
+
+
+        #tapButton {
+            width: 220px;
+            height: 220px;
+
+            border-radius: 50%;
+
+            border: none;
+
+            background:
+                radial-gradient(circle at 35% 30%, #ffe88a, #f5b900 55%, #bd7e00);
+
+            box-shadow:
+                0 15px 30px rgba(0, 0, 0, 0.5),
+                inset 0 5px 10px rgba(255, 255, 255, 0.5),
+                inset 0 -10px 15px rgba(120, 70, 0, 0.4);
+
+            font-size: 90px;
+
+            cursor: pointer;
+
+            transition: transform 0.08s;
+        }
+
+
+        /* Эффект нажатия */
+
+        #tapButton:active {
+            transform: scale(0.90);
+        }
+
+
+        /* +1 */
+
+        .plus-one {
+            position: absolute;
+
+            pointer-events: none;
+
+            font-size: 28px;
+            font-weight: bold;
+
+            animation: plusOne 0.8s ease-out forwards;
+        }
+
+
+        @keyframes plusOne {
+
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(1.4);
+            }
+
+        }
+
+
+        /* Подсказка */
+
+        .hint {
+            color: #888;
+
+            font-size: 15px;
+
+            margin-bottom: 30px;
+        }
+
+
+        /* Кнопка назад */
+
+        .back {
+            width: 100%;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 15px;
+
+            background: #252525;
+
+            color: white;
+
+            font-size: 17px;
+
+            cursor: pointer;
+        }
+
+
+        .back:active {
+            transform: scale(0.97);
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<div class="game">
+
+    <h1>🪙 Тапалка</h1>
+
+
+    <div class="balance-box">
+
+        <div class="balance-title">
+            ТВОЙ БАЛАНС
+        </div>
+
+        <div class="balance">
+            💰 <span id="coins">0</span>
+        </div>
+
+    </div>
+
+
+    <div class="coin-area">
+
+        <button id="tapButton">
+            🪙
+        </button>
+
+    </div>
+
+
+    <div class="hint">
+        Нажимай на монету и зарабатывай 🪙
+    </div>
+
+
+    <button class="back" onclick="goBack()">
+        ⬅️ Назад
+    </button>
+
+</div>
+
+
+<script>
+
+    // Получаем сохранённый баланс
+    let coins = Number(localStorage.getItem("balance")) || 0;
+
+
+    // Показываем баланс
+    const coinsElement = document.getElementById("coins");
+
+    coinsElement.textContent = coins;
+
+
+    // Кнопка монеты
+    const tapButton = document.getElementById("tapButton");
+
+
+    tapButton.addEventListener("click", function(event) {
+
+        // Добавляем монету
+        coins += 1;
+
+
+        // Сохраняем
+        localStorage.setItem("balance", coins);
+
+
+        // Обновляем баланс
+        coinsElement.textContent = coins;
+
+
+        // Создаём +1
+        const plus = document.createElement("div");
+
+        plus.className = "plus-one";
+
+        plus.textContent = "+1 🪙";
+
+
+        // Ставим около места нажатия
+        plus.style.left = event.offsetX + "px";
+        plus.style.top = event.offsetY + "px";
+
+
+        document.querySelector(".coin-area").appendChild(plus);
+
+
+        // Удаляем после анимации
+        setTimeout(() => {
+            plus.remove();
+        }, 800);
+
+    });
+
+
+    // Назад
+    function goBack() {
+
+        window.location.href = "index.html";
+
+    }
+
+</script>
+
+
+</body>
+</html>

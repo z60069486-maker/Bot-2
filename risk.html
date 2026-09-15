@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Риск</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    min-height: 100vh;
+
+    font-family: Arial, sans-serif;
+
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #35115c,
+            #100714 55%,
+            #050308
+        );
+
+    display: flex;
+
+    justify-content: center;
+
+}
+
+.game {
+
+    width: 100%;
+
+    max-width: 500px;
+
+    padding: 20px;
+
+}
+
+.top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 15px;
+
+}
+
+.back {
+
+    border: 0;
+
+    background: #ffffff15;
+
+    color: white;
+
+    padding: 10px 15px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+}
+
+.balance {
+
+    background: #ffffff12;
+
+    border: 1px solid #ffffff20;
+
+    padding: 10px 15px;
+
+    border-radius: 12px;
+
+    font-weight: bold;
+
+}
+
+h1 {
+
+    text-align: center;
+
+    margin: 10px 0 5px;
+
+    font-size: 30px;
+
+}
+
+.subtitle {
+
+    text-align: center;
+
+    color: #aaa;
+
+    margin-bottom: 18px;
+
+}
+
+.ticket {
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b2cff,
+            #42116f
+        );
+
+    padding: 12px;
+
+    border-radius: 14px;
+
+    margin-bottom: 15px;
+
+    font-weight: bold;
+
+    box-shadow:
+        0 0 25px #7b25ff40;
+
+}
+
+.reward-box {
+
+    text-align: center;
+
+    background: #ffffff0c;
+
+    border: 1px solid #ffffff18;
+
+    border-radius: 18px;
+
+    padding: 16px;
+
+    margin-bottom: 18px;
+
+}
+
+.reward-title {
+
+    color: #999;
+
+    font-size: 14px;
+
+}
+
+.reward {
+
+    font-size: 36px;
+
+    font-weight: bold;
+
+    margin-top: 5px;
+
+}
+
+.attempts {
+
+    text-align: center;
+
+    color: #aaa;
+
+    margin-bottom: 15px;
+
+}
+
+.cards {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 10px;
+
+}
+
+.card {
+
+    aspect-ratio: 1;
+
+    border: 1px solid #ffffff20;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #29103d,
+            #120719
+        );
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 38px;
+
+    transition:
+        transform .18s,
+        box-shadow .18s,
+        background .18s;
+
+    box-shadow:
+        0 8px 20px #00000035;
+
+}
+
+.card:hover {
+
+    transform: translateY(-5px) scale(1.03);
+
+    box-shadow:
+        0 10px 25px #8e32ff40;
+
+}
+
+.card:active {
+
+    transform: scale(.94);
+
+}
+
+.card.open {
+
+    cursor: default;
+
+    animation: openCard .35s;
+
+}
+
+@keyframes openCard {
+
+    0% {
+        transform: rotateY(90deg);
+    }
+
+    100% {
+        transform: rotateY(0);
+    }
+
+}
+
+.good {
+
+    background:
+        linear-gradient(
+            145deg,
+            #145b37,
+            #082619
+        );
+
+}
+
+.bad {
+
+    background:
+        linear-gradient(
+            145deg,
+            #681923,
+            #28080d
+        );
+
+}
+
+.big {
+
+    animation:
+        pulse .7s infinite alternate;
+
+}
+
+@keyframes pulse {
+
+    from {
+        box-shadow:
+            0 0 10px #ffd23f40;
+    }
+
+    to {
+        box-shadow:
+            0 0 35px #ffd23f90;
+    }
+
+}
+
+.message {
+
+    min-height: 25px;
+
+    text-align: center;
+
+    margin: 15px 0;
+
+    color: #ddd;
+
+    font-weight: bold;
+
+}
+
+.buttons {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+}
+
+.action {
+
+    border: 0;
+
+    border-radius: 15px;
+
+    padding: 15px;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+.take {
+
+    background:
+        linear-gradient(
+            135deg,
+            #19b45e,
+            #0b7038
+        );
+
+}
+
+.risk {
+
+    background:
+        linear-gradient(
+            135deg,
+            #9a31ed,
+            #53139a
+        );
+
+}
+
+.new {
+
+    width: 100%;
+
+    margin-top: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #333,
+            #171717
+        );
+
+}
+
+.action:active {
+
+    transform: scale(.97);
+
+}
+
+.info {
+
+    text-align: center;
+
+    color: #777;
+
+    font-size: 12px;
+
+    margin-top: 15px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="game">
+
+    <div class="top">
+
+        <button
+            class="back"
+            onclick="location.href='index.html'"
+        >
+            ← Назад
+        </button>
+
+        <div class="balance">
+            💰 <span id="balance">0</span>
+        </div>
+
+    </div>
+
+
+    <h1>🎯 Риск</h1>
+
+    <div class="subtitle">
+        Забери выигрыш или рискни ещё
+    </div>
+
+
+    <div class="ticket">
+        🎟️ Вход: 5 000
+    </div>
+
+
+    <div class="reward-box">
+
+        <div class="reward-title">
+            Текущий выигрыш
+        </div>
+
+        <div class="reward">
+            💰 <span id="reward">0</span>
+        </div>
+
+    </div>
+
+
+    <div class="attempts">
+
+        Попытки:
+        <span id="attempts">
+            5
+        </span>
+
+    </div>
+
+
+    <div
+        class="cards"
+        id="cards"
+    ></div>
+
+
+    <div
+        class="message"
+        id="message"
+    >
+        Выбери карту
+    </div>
+
+
+    <div class="buttons">
+
+        <button
+            class="action take"
+            onclick="takeReward()"
+        >
+            💰 Забрать
+        </button>
+
+        <button
+            class="action risk"
+            onclick="startRisk()"
+        >
+            🎲 Рискнуть
+        </button>
+
+    </div>
+
+
+    <button
+        class="action new"
+        onclick="newGame()"
+    >
+        🔄 Новая игра
+    </button>
+
+
+    <div class="info">
+
+        Чем дольше играешь,
+        тем больше можешь выиграть.
+        Но проигрыш уничтожит текущую награду.
+
+    </div>
+
+</div>
+
+
+<script>
+
+const TICKET = 5000;
+
+let balance =
+    Number(
+        localStorage.getItem("balance")
+    ) || 0;
+
+let reward = 0;
+
+let attempts = 5;
+
+let gameActive = false;
+
+let selected = false;
+
+let currentCards = [];
+
+
+const balanceEl =
+    document.getElementById("balance");
+
+const rewardEl =
+    document.getElementById("reward");
+
+const attemptsEl =
+    document.getElementById("attempts");
+
+const cardsEl =
+    document.getElementById("cards");
+
+const messageEl =
+    document.getElementById("message");
+
+
+function saveBalance() {
+
+    localStorage.setItem(
+        "balance",
+        String(balance)
+    );
+
+}
+
+
+function update() {
+
+    balanceEl.textContent =
+        balance.toLocaleString("ru-RU");
+
+    rewardEl.textContent =
+        reward.toLocaleString("ru-RU");
+
+    attemptsEl.textContent =
+        attempts;
+
+}
+
+
+function random(min, max) {
+
+    return Math.floor(
+        Math.random() *
+        (max - min + 1)
+    ) + min;
+
+}
+
+
+function createCards() {
+
+    currentCards = [];
+
+    for (
+        let i = 0;
+        i < 6;
+        i++
+    ) {
+
+        currentCards.push(
+            randomPrize()
+        );
+
+    }
+
+}
+
+
+function randomPrize() {
+
+    const r =
+        Math.random();
+
+
+    if (r < 0.42) {
+
+        return {
+            type: "money",
+            value: random(1000, 2500)
+        };
+
+    }
+
+
+    if (r < 0.68) {
+
+        return {
+            type: "money",
+            value: random(2500, 5000)
+        };
+
+    }
+
+
+    if (r < 0.82) {
+
+        return {
+            type: "money",
+            value: random(5000, 8000)
+        };
+
+    }
+
+
+    if (r < 0.90) {
+
+        return {
+            type: "double",
+            value: 2
+        };
+
+    }
+
+
+    if (r < 0.95) {
+
+        return {
+            type: "half",
+            value: 50
+        };
+
+    }
+
+
+    return {
+        type: "lose",
+        value: 100
+    };
+
+}
+
+
+function drawCards() {
+
+    cardsEl.innerHTML = "";
+
+    selected = false;
+
+
+    for (
+        let i = 0;
+        i < 6;
+        i++
+    ) {
+
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "card";
+
+        button.textContent =
+            "❓";
+
+
+        button.onclick =
+            function() {
+
+                chooseCard(
+                    i,
+                    button
+                );
+
+            };
+
+
+        cardsEl.appendChild(
+            button
+        );
+
+    }
+
+}
+
+
+function startGame() {
+
+    if (balance < TICKET) {
+
+        messageEl.textContent =
+            "❌ Нужно 5 000 для входа.";
+
+        return;
+
+    }
+
+
+    balance -= TICKET;
+
+    saveBalance();
+
+    reward = 0;
+
+    attempts = 5;
+
+    gameActive = true;
+
+    messageEl.textContent =
+        "🎯 Игра началась!";
+
+
+    createCards();
+
+    drawCards();
+
+    update();
+
+}
+
+
+function chooseCard(index, button) {
+
+    if (!gameActive) {
+
+        return;
+
+    }
+
+
+    if (selected) {
+
+        return;
+
+    }
+
+
+    selected = true;
+
+    button.classList.add(
+        "open"
+    );
+
+
+    const prize =
+        currentCards[index];
+
+
+    if (prize.type === "money") {
+
+        reward += prize.value;
+
+        button.textContent =
+            "💰";
+
+        button.classList.add(
+            "good"
+        );
+
+        messageEl.textContent =
+            "💰 +" +
+            prize.value.toLocaleString("ru-RU");
+
+    }
+
+
+    else if (prize.type === "double") {
+
+        if (reward > 0) {
+
+            reward *= 2;
+
+        }
+
+        else {
+
+            reward = 5000;
+
+        }
+
+
+        button.textContent =
+            "🔥";
+
+        button.classList.add(
+            "good",
+            "big"
+        );
+
+        messageEl.textContent =
+            "🔥 x2!";
+
+    }
+
+
+    else if (prize.type === "half") {
+
+        reward =
+            Math.floor(
+                reward / 2
+            );
+
+
+        button.textContent =
+            "☠️";
+
+        button.classList.add(
+            "bad"
+        );
+
+        messageEl.textContent =
+            "☠️ Потеряно 50%!";
+
+    }
+
+
+    else if (prize.type === "lose") {
+
+        reward = 0;
+
+        button.textContent =
+            "💀";
+
+        button.classList.add(
+            "bad",
+            "big"
+        );
+
+        messageEl.textContent =
+            "💀 ВСЁ СГОРЕЛО!";
+
+    }
+
+
+    attempts--;
+
+    update();
+
+}
+
+
+function startRisk() {
+
+    if (!gameActive) {
+
+        messageEl.textContent =
+            "Сначала начни игру.";
+
+        return;
+
+    }
+
+
+    if (!selected) {
+
+        messageEl.textContent =
+            "Сначала выбери карту.";
+
+        return;
+
+    }
+
+
+    if (attempts <= 0) {
+
+        messageEl.textContent =
+            "❌ Попытки закончились.";
+
+        return;
+
+    }
+
+
+    createCards();
+
+    drawCards();
+
+    messageEl.textContent =
+        "🎲 Новый раунд! Рискни ещё раз.";
+
+}
+
+
+function takeReward() {
+
+    if (!gameActive) {
+
+        messageEl.textContent =
+            "Нет активной игры.";
+
+        return;
+
+    }
+
+
+    if (reward <= 0) {
+
+        messageEl.textContent =
+            "😢 Тебе нечего забирать.";
+
+        return;
+
+    }
+
+
+    balance += reward;
+
+    saveBalance();
+
+
+    messageEl.textContent =
+        "💰 Забрано " +
+        reward.toLocaleString("ru-RU") +
+        "!";
+
+
+    reward = 0;
+
+    gameActive = false;
+
+    selected = false;
+
+    update();
+
+}
+
+
+function newGame() {
+
+    if (gameActive && reward > 0) {
+
+        const answer =
+            confirm(
+                "Текущий выигрыш " +
+                reward.toLocaleString("ru-RU") +
+                " будет потерян. Начать новую игру?"
+            );
+
+
+        if (!answer) {
+
+            return;
+
+        }
+
+    }
+
+
+    startGame();
+
+}
+
+
+update();
+
+
+if (balance >= TICKET) {
+
+    startGame();
+
+}
+
+else {
+
+    messageEl.textContent =
+        "🎟️ Для начала нужен билет за 5 000.";
+
+}
+
+</script>
+
+</body>
+
+</html>

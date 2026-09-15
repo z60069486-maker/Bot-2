@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Game Hub</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <h1>🎮 Дайте денях</h1>
+
+        <div class="balance">
+            💰 <span id="balance">0</span>
+        </div>
+
+        <div class="games">
+
+            <button
+    class="game-button cards-button special-cards"
+    onclick="openGame('cards.html')"
+>
+    <span class="emoji">🃏</span>
+    Карточки
+</button>
+
+            <button
+    class="game-button"
+    onclick="openGame('risk.html')"
+>
+    <span class="emoji">🎯</span>
+    Риск
+</button>
+
+            <button class="game-button" onclick="openGame('tapper.html')">
+                <span>🪙</span>
+                Тапалка
+            </button>
+
+            <button class="game-button" onclick="openGame('racing.html')">
+                <span>🏎️</span>
+                Гонки
+            </button>
+
+            <button class="game-button" onclick="openGame('casino.html')">
+                <span>🎰</span>
+                Казино
+            </button>
+
+            <button
+    class="game-button"
+    onclick="openGame('mine.html')"
+>
+    <span class="emoji">🗺️</span>
+    Охота за сокровищами
+</button>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Охота за сокровищами</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    min-height: 100vh;
+
+    font-family: Arial, sans-serif;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #3b145c,
+            #100714 55%,
+            #050308
+        );
+
+    color: white;
+
+    display: flex;
+
+    justify-content: center;
+
+}
+
+.game {
+
+    width: 100%;
+
+    max-width: 500px;
+
+    padding: 20px;
+
+}
+
+.top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 15px;
+
+}
+
+.back {
+
+    border: 0;
+
+    background: #ffffff15;
+
+    color: white;
+
+    padding: 10px 15px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+}
+
+.balance {
+
+    background: #ffffff12;
+
+    border: 1px solid #ffffff20;
+
+    padding: 10px 15px;
+
+    border-radius: 12px;
+
+    font-weight: bold;
+
+}
+
+h1 {
+
+    text-align: center;
+
+    margin: 10px 0 5px;
+
+    font-size: 28px;
+
+}
+
+.subtitle {
+
+    text-align: center;
+
+    color: #aaa;
+
+    margin-bottom: 15px;
+
+}
+
+.ticket {
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b2cff,
+            #42116f
+        );
+
+    padding: 12px;
+
+    border-radius: 14px;
+
+    margin-bottom: 15px;
+
+    font-weight: bold;
+
+    box-shadow: 0 0 20px #7b25ff40;
+
+}
+
+.stats {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr 1fr;
+
+    gap: 8px;
+
+    margin-bottom: 15px;
+
+}
+
+.stat {
+
+    background: #ffffff0d;
+
+    border: 1px solid #ffffff15;
+
+    border-radius: 12px;
+
+    padding: 10px;
+
+    text-align: center;
+
+}
+
+.stat small {
+
+    display: block;
+
+    color: #999;
+
+    margin-bottom: 5px;
+
+}
+
+.stat strong {
+
+    font-size: 18px;
+
+}
+
+.reward-box {
+
+    background: #ffffff0d;
+
+    border: 1px solid #ffffff20;
+
+    border-radius: 16px;
+
+    padding: 15px;
+
+    text-align: center;
+
+    margin-bottom: 15px;
+
+}
+
+.reward-title {
+
+    color: #aaa;
+
+    font-size: 14px;
+
+}
+
+.reward {
+
+    font-size: 32px;
+
+    font-weight: bold;
+
+    margin-top: 5px;
+
+}
+
+.risk {
+
+    margin-top: 12px;
+
+}
+
+.risk-head {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 6px;
+
+}
+
+.risk-bar {
+
+    width: 100%;
+
+    height: 10px;
+
+    background: #ffffff12;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+}
+
+.risk-fill {
+
+    height: 100%;
+
+    width: 0%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #35e56b,
+            #ffd23f,
+            #ff3131
+        );
+
+    transition: width .3s;
+
+}
+
+.grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 8px;
+
+    margin-bottom: 15px;
+
+}
+
+.cell {
+
+    aspect-ratio: 1;
+
+    border: 1px solid #ffffff18;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #24102f,
+            #120818
+        );
+
+    color: white;
+
+    font-size: 26px;
+
+    cursor: pointer;
+
+    transition:
+        transform .15s,
+        background .15s,
+        box-shadow .15s;
+
+}
+
+.cell:hover {
+
+    transform: scale(1.05);
+
+    background: #341449;
+
+}
+
+.cell.open {
+
+    cursor: default;
+
+    transform: scale(.96);
+
+}
+
+.cell.good {
+
+    background: #173d29;
+
+    box-shadow: 0 0 12px #27d66b35;
+
+}
+
+.cell.bad {
+
+    background: #4a161b;
+
+    box-shadow: 0 0 12px #ff303035;
+
+}
+
+.buttons {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+}
+
+button.action {
+
+    border: 0;
+
+    border-radius: 14px;
+
+    padding: 14px;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+.take {
+
+    background:
+        linear-gradient(
+            135deg,
+            #18a957,
+            #0d703a
+        );
+
+}
+
+.new {
+
+    background:
+        linear-gradient(
+            135deg,
+            #7132db,
+            #42127f
+        );
+
+}
+
+.action:active {
+
+    transform: scale(.97);
+
+}
+
+.info {
+
+    text-align: center;
+
+    color: #777;
+
+    font-size: 12px;
+
+    margin-top: 15px;
+
+}
+
+.overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: #000000b8;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 10;
+
+}
+
+.monster-box {
+
+    width: 100%;
+
+    max-width: 360px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #29102e,
+            #100710
+        );
+
+    border: 1px solid #ff3b4a55;
+
+    border-radius: 20px;
+
+    padding: 25px;
+
+    text-align: center;
+
+    box-shadow: 0 0 50px #ff1d3240;
+
+}
+
+.monster {
+
+    font-size: 80px;
+
+    animation: monster 1s infinite alternate;
+
+}
+
+@keyframes monster {
+
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-8px);
+    }
+
+}
+
+.monster-hp {
+
+    height: 14px;
+
+    background: #ffffff12;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    margin: 15px 0;
+
+}
+
+.monster-hp-fill {
+
+    height: 100%;
+
+    width: 100%;
+
+    background: #ff3348;
+
+    transition: width .2s;
+
+}
+
+.fight {
+
+    width: 100%;
+
+    border: 0;
+
+    border-radius: 14px;
+
+    padding: 14px;
+
+    background: #d9283b;
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+.message {
+
+    min-height: 24px;
+
+    text-align: center;
+
+    margin: 10px 0;
+
+    color: #ddd;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="game">
+
+    <div class="top">
+
+        <button
+            class="back"
+            onclick="location.href='index.html'"
+        >
+            ← Назад
+        </button>
+
+        <div class="balance">
+            💰 <span id="balance">0</span>
+        </div>
+
+    </div>
+
+    <h1>🗺️ Охота за сокровищами</h1>
+
+    <div class="subtitle">
+        Рискуй ради большой награды
+    </div>
+
+    <div class="ticket">
+        🎟️ Билет: 10 000
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <small>Награда</small>
+            <strong id="reward">0</strong>
+        </div>
+
+        <div class="stat">
+            <small>Открыто</small>
+            <strong id="opened">0 / 25</strong>
+        </div>
+
+        <div class="stat">
+            <small>Риск</small>
+            <strong id="riskText">0%</strong>
+        </div>
+
+    </div>
+
+    <div class="reward-box">
+
+        <div class="reward-title">
+            Текущая награда
+        </div>
+
+        <div class="reward">
+            💰 <span id="bigReward">0</span>
+        </div>
+
+        <div class="risk">
+
+            <div class="risk-head">
+
+                <span>☠️ Риск</span>
+
+                <span id="riskLabel">
+                    Низкий
+                </span>
+
+            </div>
+
+            <div class="risk-bar">
+
+                <div
+                    class="risk-fill"
+                    id="riskFill"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div
+        class="grid"
+        id="grid"
+    ></div>
+
+    <div class="message" id="message"></div>
+
+    <div class="buttons">
+
+        <button
+            class="action take"
+            onclick="takeReward()"
+        >
+            💰 Забрать
+        </button>
+
+        <button
+            class="action new"
+            onclick="newRound()"
+        >
+            🔄 Новый раунд
+        </button>
+
+    </div>
+
+    <div class="info">
+        Билет стоит 10 000. Можно выиграть больше,
+        а можно потерять весь билет.
+    </div>
+
+</div>
+
+
+<div
+    class="overlay"
+    id="monsterScreen"
+>
+
+    <div class="monster-box">
+
+        <div class="monster">
+            👹
+        </div>
+
+        <h2>
+            Монстр!
+        </h2>
+
+        <p>
+            Победи его и забери награду.
+        </p>
+
+        <div class="monster-hp">
+
+            <div
+                class="monster-hp-fill"
+                id="monsterHp"
+            ></div>
+
+        </div>
+
+        <p>
+            HP: <span id="monsterHpText">100</span>
+        </p>
+
+        <button
+            class="fight"
+            onclick="hitMonster()"
+        >
+            ⚔️ Атаковать
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const TICKET = 10000;
+
+let balance =
+    Number(
+        localStorage.getItem("balance")
+    ) || 0;
+
+let currentReward = 0;
+
+let opened = 0;
+
+let map = [];
+
+let monsterHP = 100;
+
+let gameStarted = false;
+
+
+const balanceEl =
+    document.getElementById("balance");
+
+const rewardEl =
+    document.getElementById("reward");
+
+const bigRewardEl =
+    document.getElementById("bigReward");
+
+const openedEl =
+    document.getElementById("opened");
+
+const riskTextEl =
+    document.getElementById("riskText");
+
+const riskFillEl =
+    document.getElementById("riskFill");
+
+const riskLabelEl =
+    document.getElementById("riskLabel");
+
+const gridEl =
+    document.getElementById("grid");
+
+const messageEl =
+    document.getElementById("message");
+
+const monsterScreen =
+    document.getElementById("monsterScreen");
+
+const monsterHpEl =
+    document.getElementById("monsterHp");
+
+const monsterHpText =
+    document.getElementById("monsterHpText");
+
+
+function saveBalance() {
+
+    localStorage.setItem(
+        "balance",
+        String(balance)
+    );
+
+}
+
+
+function updateBalance() {
+
+    balanceEl.textContent =
+        balance.toLocaleString("ru-RU");
+
+}
+
+
+function updateReward() {
+
+    rewardEl.textContent =
+        currentReward.toLocaleString("ru-RU");
+
+    bigRewardEl.textContent =
+        currentReward.toLocaleString("ru-RU");
+
+    openedEl.textContent =
+        opened + " / 25";
+
+    const risk =
+        Math.min(
+            opened * 4,
+            100
+        );
+
+    riskTextEl.textContent =
+        risk + "%";
+
+    riskFillEl.style.width =
+        risk + "%";
+
+
+    if (risk < 25) {
+
+        riskLabelEl.textContent =
+            "Низкий";
+
+    }
+
+    else if (risk < 50) {
+
+        riskLabelEl.textContent =
+            "Средний";
+
+    }
+
+    else if (risk < 75) {
+
+        riskLabelEl.textContent =
+            "Высокий";
+
+    }
+
+    else {
+
+        riskLabelEl.textContent =
+            "КРИТИЧЕСКИЙ";
+
+    }
+
+}
+
+
+function random(min, max) {
+
+    return Math.floor(
+        Math.random() *
+        (max - min + 1)
+    ) + min;
+
+}
+
+
+function randomType() {
+
+    const r =
+        Math.random();
+
+
+    if (r < 0.46) {
+
+        return "coins";
+
+    }
+
+    if (r < 0.68) {
+
+        return "gold";
+
+    }
+
+    if (r < 0.81) {
+
+        return "diamond";
+
+    }
+
+    if (r < 0.87) {
+
+        return "chest";
+
+    }
+
+    if (r < 0.885) {
+
+        return "jackpot";
+
+    }
+
+    if (r < 0.955) {
+
+        return "trap";
+
+    }
+
+    return "monster";
+
+}
+
+
+function createMap() {
+
+    map = [];
+
+    for (
+        let i = 0;
+        i < 25;
+        i++
+    ) {
+
+        map.push(
+            randomType()
+        );
+
+    }
+
+}
+
+
+function getIcon(type) {
+
+    if (type === "coins") {
+        return "🪙";
+    }
+
+    if (type === "gold") {
+        return "💰";
+    }
+
+    if (type === "diamond") {
+        return "💎";
+    }
+
+    if (type === "chest") {
+        return "🧰";
+    }
+
+    if (type === "jackpot") {
+        return "⭐";
+    }
+
+    if (type === "trap") {
+        return "💣";
+    }
+
+    if (type === "monster") {
+        return "👹";
+    }
+
+}
+
+
+function startRound() {
+
+    if (balance < TICKET) {
+
+        messageEl.textContent =
+            "❌ Нужно 10 000 для входа.";
+
+        return;
+
+    }
+
+
+    balance -= TICKET;
+
+    saveBalance();
+
+    updateBalance();
+
+
+    currentReward = 0;
+
+    opened = 0;
+
+    gameStarted = true;
+
+    messageEl.textContent =
+        "🎟️ Билет оплачен. Выбирай клетку.";
+
+
+    createMap();
+
+    drawGrid();
+
+    updateReward();
+
+}
+
+
+function drawGrid() {
+
+    gridEl.innerHTML = "";
+
+
+    for (
+        let i = 0;
+        i < 25;
+        i++
+    ) {
+
+        const cell =
+            document.createElement("button");
+
+        cell.className =
+            "cell";
+
+        cell.textContent =
+            "❓";
+
+
+        cell.onclick = function() {
+
+            openCell(
+                i,
+                cell
+            );
+
+        };
+
+
+        gridEl.appendChild(cell);
+
+    }
+
+}
+
+
+function openCell(index, cell) {
+
+    if (!gameStarted) {
+
+        return;
+
+    }
+
+
+    if (
+        cell.classList.contains("open")
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        monsterScreen.style.display === "flex"
+    ) {
+
+        return;
+
+    }
+
+
+    const type =
+        map[index];
+
+
+    cell.classList.add("open");
+
+    opened++;
+
+
+    if (type === "coins") {
+
+        const amount =
+            random(50, 300);
+
+        currentReward += amount;
+
+        cell.textContent =
+            "🪙";
+
+        cell.classList.add("good");
+
+        messageEl.textContent =
+            "🪙 Нашёл монеты: +" +
+            amount.toLocaleString("ru-RU");
+
+    }
+
+
+    else if (type === "gold") {
+
+        const amount =
+            random(300, 800);
+
+        currentReward += amount;
+
+        cell.textContent =
+            "💰";
+
+        cell.classList.add("good");
+
+        messageEl.textContent =
+            "💰 Золото: +" +
+            amount.toLocaleString("ru-RU");
+
+    }
+
+
+    else if (type === "diamond") {
+
+        const amount =
+            random(800, 1500);
+
+        currentReward += amount;
+
+        cell.textContent =
+            "💎";
+
+        cell.classList.add("good");
+
+        messageEl.textContent =
+            "💎 Алмаз: +" +
+            amount.toLocaleString("ru-RU");
+
+    }
+
+
+    else if (type === "chest") {
+
+        const amount =
+            random(1000, 3000);
+
+        currentReward += amount;
+
+        cell.textContent =
+            "🧰";
+
+        cell.classList.add("good");
+
+        messageEl.textContent =
+            "🧰 Сундук: +" +
+            amount.toLocaleString("ru-RU");
+
+    }
+
+
+    else if (type === "jackpot") {
+
+        const amount =
+            random(15000, 30000);
+
+        currentReward += amount;
+
+        cell.textContent =
+            "⭐";
+
+        cell.classList.add("good");
+
+        messageEl.textContent =
+            "⭐ ДЖЕКПОТ! +" +
+            amount.toLocaleString("ru-RU");
+
+    }
+
+
+    else if (type === "trap") {
+
+        cell.textContent =
+            "💣";
+
+        cell.classList.add("bad");
+
+
+        let lossPercent;
+
+
+        if (opened <= 5) {
+
+            lossPercent = 25;
+
+        }
+
+        else if (opened <= 10) {
+
+            lossPercent = 50;
+
+        }
+
+        else if (opened <= 15) {
+
+            lossPercent = 70;
+
+        }
+
+        else if (opened <= 20) {
+
+            lossPercent = 90;
+
+        }
+
+        else {
+
+            lossPercent = 100;
+
+        }
+
+
+        const lost =
+            Math.floor(
+                currentReward *
+                lossPercent /
+                100
+            );
+
+
+        currentReward -= lost;
+
+
+        if (currentReward < 0) {
+
+            currentReward = 0;
+
+        }
+
+
+        messageEl.textContent =
+            "💣 ЛОВУШКА! Потеряно " +
+            lost.toLocaleString("ru-RU") +
+            " (" +
+            lossPercent +
+            "%)";
+
+    }
+
+
+    else if (type === "monster") {
+
+        cell.textContent =
+            "👹";
+
+        cell.classList.add("bad");
+
+        openMonster();
+
+    }
+
+
+    if (opened === 25) {
+
+        const bonus =
+            random(2000, 5000);
+
+        currentReward += bonus;
+
+        messageEl.textContent =
+            "🔥 Вся карта открыта! Бонус +" +
+            bonus.toLocaleString("ru-RU");
+
+    }
+
+
+    updateReward();
+
+}
+
+
+function openMonster() {
+
+    monsterHP = 100;
+
+    monsterHpEl.style.width =
+        "100%";
+
+    monsterHpText.textContent =
+        "100";
+
+    monsterScreen.style.display =
+        "flex";
+
+}
+
+
+function hitMonster() {
+
+    const damage =
+        random(15, 35);
+
+
+    monsterHP -= damage;
+
+
+    if (monsterHP < 0) {
+
+        monsterHP = 0;
+
+    }
+
+
+    monsterHpEl.style.width =
+        monsterHP + "%";
+
+    monsterHpText.textContent =
+        monsterHP;
+
+
+    if (monsterHP === 0) {
+
+        const reward =
+            random(1500, 4000);
+
+        currentReward += reward;
+
+
+        monsterScreen.style.display =
+            "none";
+
+
+        messageEl.textContent =
+            "⚔️ Монстр побеждён! +" +
+            reward.toLocaleString("ru-RU");
+
+
+        updateReward();
+
+    }
+
+}
+
+
+function takeReward() {
+
+    if (!gameStarted) {
+
+        messageEl.textContent =
+            "Сначала начни новый раунд.";
+
+        return;
+
+    }
+
+
+    if (currentReward <= 0) {
+
+        messageEl.textContent =
+            "😢 Забрать нечего.";
+
+        return;
+
+    }
+
+
+    balance += currentReward;
+
+    saveBalance();
+
+    updateBalance();
+
+
+    messageEl.textContent =
+        "💰 Забрано " +
+        currentReward.toLocaleString("ru-RU") +
+        "!";
+
+
+    currentReward = 0;
+
+    gameStarted = false;
+
+    updateReward();
+
+}
+
+
+function newRound() {
+
+    if (gameStarted) {
+
+        const answer =
+            confirm(
+                "Текущая награда " +
+                currentReward.toLocaleString("ru-RU") +
+                " будет потеряна. Начать новый раунд?"
+            );
+
+
+        if (!answer) {
+
+            return;
+
+        }
+
+    }
+
+
+    if (monsterScreen.style.display === "flex") {
+
+        monsterScreen.style.display =
+            "none";
+
+    }
+
+
+    startRound();
+
+}
+
+
+updateBalance();
+
+updateReward();
+
+drawGrid();
+
+
+if (balance >= TICKET) {
+
+    startRound();
+
+}
+
+else {
+
+    messageEl.textContent =
+        "🎟️ Для начала нужен билет за 10 000.";
+
+}
+
+</script>
+
+</body>
+
+</html>

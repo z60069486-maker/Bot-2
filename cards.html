@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Магазин карточек</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+
+    min-height: 100vh;
+
+    font-family: Arial, sans-serif;
+
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #4d1975,
+            #170721 45%,
+            #08020d 100%
+        );
+}
+
+
+/* ОСНОВА */
+
+.page {
+
+    width: 100%;
+    max-width: 700px;
+
+    margin: auto;
+
+    padding: 18px;
+
+}
+
+
+/* ВЕРХ */
+
+.top {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    margin-bottom: 25px;
+
+}
+
+
+.back {
+
+    border: 1px solid #ffffff25;
+
+    background: #ffffff12;
+
+    color: white;
+
+    padding: 10px 15px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+}
+
+
+.balance {
+
+    padding: 10px 17px;
+
+    border-radius: 14px;
+
+    color: #3b2100;
+
+    font-weight: bold;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffe000,
+            #ff9900
+        );
+
+    box-shadow:
+        0 0 20px #ffb00055;
+
+}
+
+
+/* ЗАГОЛОВОК */
+
+h1 {
+
+    text-align: center;
+
+    font-size: 36px;
+
+    text-shadow:
+        0 0 15px #b000ff,
+        0 0 35px #7000ff;
+
+}
+
+
+.subtitle {
+
+    text-align: center;
+
+    margin-top: 7px;
+
+    margin-bottom: 25px;
+
+    color: #cbbbd3;
+
+}
+
+
+/* МАГАЗИН */
+
+.cards {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 15px;
+
+}
+
+
+/* КАРТОЧКА */
+
+.card {
+
+    position: relative;
+
+    padding: 12px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #291238,
+            #100713
+        );
+
+    border: 1px solid #ffffff20;
+
+    box-shadow:
+        0 8px 25px #00000055;
+
+    overflow: hidden;
+
+    transition: .2s;
+
+}
+
+
+.card:hover {
+
+    transform:
+        translateY(-5px);
+
+    border-color:
+        #c000ff;
+
+    box-shadow:
+        0 0 25px #a000ff66;
+
+}
+
+
+/* КАРТИНКА */
+
+.card-image {
+
+    width: 100%;
+
+    height: 180px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    border-radius: 15px;
+
+    margin-bottom: 12px;
+
+    font-size: 75px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #55206d,
+            #16091f
+        );
+
+    border: 1px solid #ffffff20;
+
+}
+
+.card-image.my-card-image img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+}
+
+
+/* НАЗВАНИЕ */
+
+.card-name {
+
+    font-size: 19px;
+
+    font-weight: bold;
+
+    margin-bottom: 5px;
+
+}
+
+
+/* РЕДКОСТЬ */
+
+.rarity {
+
+    font-size: 13px;
+
+    margin-bottom: 7px;
+
+    color: #c4b2cc;
+
+}
+
+
+/* ЦЕНА */
+
+.price {
+
+    color: #ffd000;
+
+    font-weight: bold;
+
+    margin-bottom: 10px;
+
+}
+
+
+/* КНОПКА */
+
+.buy {
+
+    width: 100%;
+
+    padding: 11px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #a900ff,
+            #6200ff
+        );
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .15s;
+
+}
+
+
+.buy:active {
+
+    transform:
+        scale(.95);
+
+}
+
+
+.buy.owned {
+
+    background: #ffffff15;
+
+    color: #aaa;
+
+    cursor: default;
+
+}
+
+
+/* УВЕДОМЛЕНИЕ */
+
+.message {
+
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 25px;
+
+    transform:
+        translate(-50%, 100px);
+
+    padding: 13px 20px;
+
+    border-radius: 14px;
+
+    background: #21102b;
+
+    border: 1px solid #ffffff25;
+
+    box-shadow:
+        0 0 25px #00000088;
+
+    opacity: 0;
+
+    transition: .3s;
+
+    z-index: 100;
+
+}
+
+
+.message.show {
+
+    transform:
+        translate(-50%, 0);
+
+    opacity: 1;
+
+}
+
+
+/* АДАПТАЦИЯ */
+
+@media(max-width: 420px) {
+
+    .cards {
+
+        gap: 9px;
+
+    }
+
+    .card {
+
+        padding: 9px;
+
+    }
+
+    .card-image {
+
+        height: 135px;
+
+        font-size: 58px;
+
+    }
+
+    .card-name {
+
+        font-size: 16px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="page">
+
+
+    <!-- ВЕРХ -->
+
+    <div class="top">
+
+
+        <button
+            class="back"
+            onclick="location.href='index.html'"
+        >
+
+            ← Назад
+
+        </button>
+
+
+        <div class="balance">
+
+            💰
+
+            <span id="balance">
+                0
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+    <h1>
+        🃏 МАГАЗИН
+    </h1>
+
+
+    <div class="subtitle">
+        Собери коллекцию
+    </div>
+
+
+    <!-- 16 КАРТОЧЕК -->
+
+    <div class="cards">
+
+
+        <!-- 1 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                🐉
+            </div>
+
+            <div class="card-name">
+                Дракон
+            </div>
+
+            <div class="rarity">
+                Обычная
+            </div>
+
+            <div class="price">
+                💰 100
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(0)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 2 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                👑
+            </div>
+
+            <div class="card-name">
+                Король
+            </div>
+
+            <div class="rarity">
+                Обычная
+            </div>
+
+            <div class="price">
+                💰 250
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(1)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 3 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                ⚔️
+            </div>
+
+            <div class="card-name">
+                Воин
+            </div>
+
+            <div class="rarity">
+                Обычная
+            </div>
+
+            <div class="price">
+                💰 500
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(2)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 4 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                🧙
+            </div>
+
+            <div class="card-name">
+                Маг
+            </div>
+
+            <div class="rarity">
+                Обычная
+            </div>
+
+            <div class="price">
+                💰 750
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(3)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 5 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                🦁
+            </div>
+
+            <div class="card-name">
+                Лев
+            </div>
+
+            <div class="rarity">
+                Редкая
+            </div>
+
+            <div class="price">
+                💰 1 500
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(4)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 6 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                💀
+            </div>
+
+            <div class="card-name">
+                Череп
+            </div>
+
+            <div class="rarity">
+                Редкая
+            </div>
+
+            <div class="price">
+                💰 2 000
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(5)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 7 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                🔥
+            </div>
+
+            <div class="card-name">
+                Огненный
+            </div>
+
+            <div class="rarity">
+                Редкая
+            </div>
+
+            <div class="price">
+                💰 3 500
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(6)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 8 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                ❄️
+            </div>
+
+            <div class="card-name">
+                Ледяной
+            </div>
+
+            <div class="rarity">
+                Редкая
+            </div>
+
+            <div class="price">
+                💰 5 000
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(7)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 9 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                👹
+            </div>
+
+            <div class="card-name">
+                Демон
+            </div>
+
+            <div class="rarity">
+                Эпическая
+            </div>
+
+            <div class="price">
+                💰 7 500
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(8)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 10 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                👽
+            </div>
+
+            <div class="card-name">
+                Пришелец
+            </div>
+
+            <div class="rarity">
+                Эпическая
+            </div>
+
+            <div class="price">
+                💰 10 000
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(9)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 11 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                🤖
+            </div>
+
+            <div class="card-name">
+                Робот
+            </div>
+
+            <div class="rarity">
+                Эпическая
+            </div>
+
+            <div class="price">
+                💰 15 000
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(10)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 12 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                🐲
+            </div>
+
+            <div class="card-name">
+                Золотой дракон
+            </div>
+
+            <div class="rarity">
+                Эпическая
+            </div>
+
+            <div class="price">
+                💰 20 000
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(11)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 13 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                💎
+            </div>
+
+            <div class="card-name">
+                Алмаз
+            </div>
+
+            <div class="rarity">
+                Легендарная
+            </div>
+
+            <div class="price">
+                💰 35 000
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(12)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 14 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                🌌
+            </div>
+
+            <div class="card-name">
+                Космос
+            </div>
+
+            <div class="rarity">
+                Легендарная
+            </div>
+
+            <div class="price">
+                💰 50 000
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(13)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 15 -->
+
+        <div class="card">
+
+            <div class="card-image">
+                ⚡
+            </div>
+
+            <div class="card-name">
+                Бог молний
+            </div>
+
+            <div class="rarity">
+                Легендарная
+            </div>
+
+            <div class="price">
+                💰 75 000
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(14)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+        <!-- 16 -->
+
+        <div class="card">
+
+            <div class="card-image my-card-image">
+    <img src="mycard.png" alt="Моя карточка">
+</div>
+
+            <div class="card-name">
+                Бобер
+            </div>
+
+            <div class="rarity">
+                Мифическая
+            </div>
+
+            <div class="price">
+                💰 100 000
+            </div>
+
+            <button
+                class="buy"
+                onclick="buyCard(15)"
+            >
+                Купить
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<div
+    class="message"
+    id="message"
+>
+</div>
+
+
+<script>
+
+
+// =============================
+// БАЛАНС
+// =============================
+
+let balance =
+    Number(
+        localStorage.getItem("balance")
+    ) || 0;
+
+
+const balanceText =
+    document.getElementById(
+        "balance"
+    );
+
+
+function updateBalance() {
+
+    balanceText.textContent =
+        balance;
+
+    localStorage.setItem(
+        "balance",
+        balance
+    );
+
+}
+
+
+updateBalance();
+
+
+// =============================
+// 16 КАРТОЧЕК
+// =============================
+
+const cards = [
+
+    {
+        name: "Дракон",
+        price: 100
+    },
+
+    {
+        name: "Король",
+        price: 250
+    },
+
+    {
+        name: "Воин",
+        price: 500
+    },
+
+    {
+        name: "Маг",
+        price: 750
+    },
+
+    {
+        name: "Лев",
+        price: 1500
+    },
+
+    {
+        name: "Череп",
+        price: 2000
+    },
+
+    {
+        name: "Огненный",
+        price: 3500
+    },
+
+    {
+        name: "Ледяной",
+        price: 5000
+    },
+
+    {
+        name: "Демон",
+        price: 7500
+    },
+
+    {
+        name: "Пришелец",
+        price: 10000
+    },
+
+    {
+        name: "Робот",
+        price: 15000
+    },
+
+    {
+        name: "Золотой дракон",
+        price: 20000
+    },
+
+    {
+        name: "Алмаз",
+        price: 35000
+    },
+
+    {
+        name: "Космос",
+        price: 50000
+    },
+
+    {
+        name: "Бог молний",
+        price: 75000
+    },
+
+    {
+        name: "Легенда",
+        price: 100000
+    }
+
+];
+
+
+// =============================
+// КУПЛЕННЫЕ
+// =============================
+
+let ownedCards =
+    JSON.parse(
+        localStorage.getItem(
+            "ownedCards"
+        )
+    ) || [];
+
+
+// =============================
+// КНОПКИ
+// =============================
+
+const buttons =
+    document.querySelectorAll(
+        ".buy"
+    );
+
+
+function refreshCards() {
+
+    buttons.forEach(
+        (button, index) => {
+
+            if (
+                ownedCards.includes(index)
+            ) {
+
+                button.textContent =
+                    "✓ Куплено";
+
+                button.classList.add(
+                    "owned"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+refreshCards();
+
+
+// =============================
+// ПОКУПКА
+// =============================
+
+function buyCard(index) {
+
+    if (
+        ownedCards.includes(index)
+    ) {
+
+        showMessage(
+            "🃏 Эта карточка уже куплена"
+        );
+
+        return;
+
+    }
+
+
+    const card =
+        cards[index];
+
+
+    if (
+        balance < card.price
+    ) {
+
+        showMessage(
+            "💸 Недостаточно монет"
+        );
+
+        return;
+
+    }
+
+
+    balance -= card.price;
+
+
+    ownedCards.push(index);
+
+
+    localStorage.setItem(
+        "ownedCards",
+        JSON.stringify(
+            ownedCards
+        )
+    );
+
+
+    updateBalance();
+
+    refreshCards();
+
+
+    showMessage(
+        "🎉 Ты купил: " +
+        card.name
+    );
+
+}
+
+
+// =============================
+// УВЕДОМЛЕНИЕ
+// =============================
+
+let messageTimer;
+
+
+function showMessage(text) {
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    message.textContent =
+        text;
+
+
+    message.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        messageTimer
+    );
+
+
+    messageTimer =
+        setTimeout(
+            () => {
+
+                message.classList.remove(
+                    "show"
+                );
+
+            },
+            2200
+        );
+
+}
+
+</script>
+
+
+</body>
+</html>
